@@ -283,6 +283,21 @@ svg.i{width:18px;height:18px;flex:none;display:block}
 .combo[data-t="2"] .cn{font-size:30px}.combo[data-t="3"] .cn{font-size:34px}.combo[data-t="4"] .cn{font-size:38px}
 .combo[data-t="3"],.combo[data-t="4"]{background:#FFB8D9}
 
+
+/* ---------- compact vertical rhythm (phones) ---------- */
+.wrap{gap:10px}
+.hero-spacer{min-height:84px}
+.logo{gap:6px}.logo .l2.clock{font-size:clamp(46px,14vw,70px)}
+.idcard{padding:10px 12px 9px;gap:10px;grid-template-columns:52px 1fr auto}
+.idcard .ph{width:52px;height:62px}.idcard .nm{font-size:20px}.idcard .rk{margin-top:3px}.idcard .desk{margin-top:4px;font-size:12.5px}
+.idcard .bc{height:28px}.idcard .month{gap:4px;padding-top:7px}.bar30{height:6px}
+.doc-h{padding:7px 12px}
+.mission .doc-b{padding:4px 12px}.mission .mrow{padding:4px 0;font-size:12.5px}
+.go-work{min-height:62px}.go-work .t b{font-size:24px}
+.tile{min-height:66px;padding:9px 38px 9px 12px;gap:3px}.tile b{font-size:17px}.tile .ti{width:26px;height:26px}
+.reset{margin:2px 0 10px;padding:7px 14px}.bspace{height:10px}
+#hud{gap:6px}.perf{padding:6px 10px 7px;gap:2px}.score{font-size:24px}
+#gaugeWrap{padding:6px 10px 7px;row-gap:4px}
 /* banner (memo), milestone stamp, messenger tutorial */
 #banner{position:absolute;left:16px;right:16px;top:calc(env(safe-area-inset-top,0px) + 232px);display:flex;justify-content:center;pointer-events:none;transition:opacity .5s,transform .5s}
 #banner.out{opacity:0;transform:translateY(-12px)}
@@ -364,6 +379,7 @@ svg.i{width:18px;height:18px;flex:none;display:block}
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19 15.5A8 8 0 118.5 5a6.5 6.5 0 0010.5 10.5z" fill="currentColor"/></symbol>
     <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2.5l2.2 11h10.6l2-7.5H7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="9.5" cy="19" r="1.6" fill="currentColor"/><circle cx="17" cy="19" r="1.6" fill="currentColor"/></symbol>
     <symbol id="i-leave" viewBox="0 0 24 24"><path d="M13 4H6v16h7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 12h9M17 8.5l3.5 3.5-3.5 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-eval" viewBox="0 0 20 22"><rect x="2" y="1.5" width="16" height="19" rx="2" fill="#fff" stroke="#2F6BFF" stroke-width="1.6"/><rect x="2" y="1.5" width="16" height="4.5" rx="2" fill="#2F6BFF"/><rect x="5" y="9" width="10" height="1.6" rx=".8" fill="#C9D4FF"/><rect x="5" y="12" width="7" height="1.6" rx=".8" fill="#C9D4FF"/><circle cx="13.5" cy="15.5" r="4" fill="#E5483B"/><text x="13.5" y="18.3" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="7.5" fill="#fff">A</text></symbol>
     <symbol id="i-cal" viewBox="0 0 20 22"><rect x="1.5" y="3.5" width="17" height="17" rx="2" fill="#fff" stroke="#E5483B" stroke-width="1.6"/><rect x="1.5" y="3.5" width="17" height="5" rx="2" fill="#E5483B"/><rect x="5" y="1" width="2" height="5" rx="1" fill="#1E2230"/><rect x="13" y="1" width="2" height="5" rx="1" fill="#1E2230"/><path d="M6 14l3 3 5-6" fill="none" stroke="#22A866" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="i-kim" viewBox="0 0 64 76"><rect width="64" height="76" fill="#DCE4F2"/><path d="M8 76c2-16 12-22 24-22s22 6 24 22z" fill="#2F3A56"/><path d="M28 54l4 10 4-10z" fill="#fff"/><path d="M31 56h2l1 12h-4z" fill="#E5483B"/><ellipse cx="32" cy="34" rx="15" ry="17" fill="#F2C9A5"/><path d="M17 30c0-12 7-17 15-17s15 5 15 16c-5-4-10-6-15-6s-10 2-15 7z" fill="#2A2320"/><circle cx="26" cy="35" r="1.8" fill="#1E2230"/><circle cx="38" cy="35" r="1.8" fill="#1E2230"/><path d="M22 39.5h8M34 39.5h8" stroke="#8B6A55" stroke-width="1" opacity=".6"/><path d="M27 45c3 2 7 2 10 0" fill="none" stroke="#1E2230" stroke-width="1.6" stroke-linecap="round"/><rect x="21" y="31" width="9" height="7" rx="2" fill="none" stroke="#1E2230" stroke-width="1.3"/><rect x="34" y="31" width="9" height="7" rx="2" fill="none" stroke="#1E2230" stroke-width="1.3"/><path d="M30 34h4" stroke="#1E2230" stroke-width="1.3"/></symbol>
     <symbol id="i-boss" viewBox="0 0 64 64"><rect width="64" height="64" fill="#FFE0B8"/><path d="M6 64c2-14 12-19 26-19s24 5 26 19z" fill="#1E2230"/><path d="M28 45l4 9 4-9z" fill="#fff"/><path d="M31 47h2l1 11h-4z" fill="#2F6BFF"/><ellipse cx="32" cy="28" rx="15" ry="16" fill="#EDBE98"/><path d="M17 24c1-9 7-13 15-13s14 4 15 12c-3-2-5-3-9-3-4 3-9 3-14 1-3 0-5 1-7 3z" fill="#5A5550"/><path d="M22 25l7 2M42 25l-7 2" stroke="#1E2230" stroke-width="2" stroke-linecap="round"/><circle cx="26" cy="30" r="1.8" fill="#1E2230"/><circle cx="38" cy="30" r="1.8" fill="#1E2230"/><path d="M26 38h12" stroke="#1E2230" stroke-width="1.8" stroke-linecap="round"/></symbol>
@@ -386,7 +402,7 @@ svg.i{width:18px;height:18px;flex:none;display:block}
       </div>
       <div class="hud-r">
         <button class="icon-btn" id="pauseBtn" aria-label="자리비움"><svg class="i"><use href="#i-pause"/></svg>자리비움</button>
-        <div class="hp" id="hHp" aria-label="남은 연차"></div>
+        <div class="hp" id="hHp" aria-label="업무 평가"></div>
       </div>
     </div>
     <div id="gaugeWrap" hidden>
@@ -458,7 +474,7 @@ svg.i{width:18px;height:18px;flex:none;display:block}
           <div class="step panel"><span class="n">2</span><div><h3></h3><p></p></div></div>
           <div class="step panel"><span class="n">3</span><div><h3></h3><p></p></div></div>
           <div class="step panel"><span class="n">4</span><div><h3></h3><p></p></div></div>
-          <div class="step panel"><span class="n">5</span><div><h3>퇴근 시각 등급 (별 3개일 때만)</h3><p>연차를 하나도 잃지 않고 하루를 마치면 <b>퇴근 시각</b>이 매겨집니다. 정시 7:00에서 <b>PERFECT 1회당 −2분, GOOD 1회당 −1분</b>, 떠안은 일 1건당 +2분. 6:30이 최고이고 S+(6:30) · S(6:31~6:40) · A(6:41~6:50) · B(6:51~6:59) · 정시로 나뉩니다. 야근 수당을 수락한 날은 등급이 없습니다.</p></div></div>
+          <div class="step panel"><span class="n">5</span><div><h3>퇴근 시각 등급 (별 3개일 때만)</h3><p>업무 평가를 한 번도 깎이지 않고(별 3개) 하루를 마치면 <b>퇴근 시각</b>이 매겨집니다. 정시 7:00에서 <b>PERFECT 1회당 −2분, GOOD 1회당 −1분</b>, 떠안은 일 1건당 +2분. 6:30이 최고이고 S+(6:30) · S(6:31~6:40) · A(6:41~6:50) · B(6:51~6:59) · 정시로 나뉩니다. 야근 수당을 수락한 날은 등급이 없습니다.</p></div></div>
           <div class="step panel"><span class="n">6</span><div><h3>난입 이벤트 · 야근 수당 · 미션</h3><p>3일차부터 팀장 난입, 긴급 회의, 정전, 긴급 결재, 커피 타임이 무작위로 끼어듭니다. 버티면 <b>야근 면제 포인트</b>. 퇴근 직전엔 <b>야근 수당</b>(10건 더, 포인트 2배) 제안이 옵니다. 매일 미션 3개를 깨면 포인트와 XP를 받고, XP가 쌓이면 인턴부터 이사까지 승진합니다.</p></div></div>
         </div>
       </div>
@@ -524,7 +540,7 @@ svg.i{width:18px;height:18px;flex:none;display:block}
           <div class="rows">
             <div><span>처리 실적</span><b id="rScore">0</b></div>
             <div><span>최대 연속 처리</span><b id="rCombo">0</b></div>
-            <div><span id="rExtraL">남은 연차</span><b id="rExtra">0</b></div>
+            <div><span id="rExtraL">업무 평가</span><b id="rExtra">0</b></div>
             <div><span>짬처리 성공 (완벽 / 반려)</span><b id="rPulse">0</b></div>
             <div><span>떠안은 남의 일</span><b id="rHits">0</b></div>
             <div><span id="rLeaveL">퇴근 시각</span><b id="rLeave">7:00 PM</b></div>
@@ -2434,7 +2450,7 @@ const STAGE_COUNT=30;
 const SUPPLIES=[
   {id:'kb',name:'기계식 키보드',price:300,desc:'짬처리 PERFECT 판정 창 +25%',icon:'⌨'},
   {id:'tumbler',name:'텀블러',price:250,desc:'못들은척 자연 회복 +30%',icon:'☕'},
-  {id:'chair',name:'인체공학 의자',price:400,desc:'연차(실드) +1',icon:'🪑'},
+  {id:'chair',name:'인체공학 의자',price:400,desc:'업무 평가 +1 (한 번 더 버팀)',icon:'🪑'},
   {id:'plate',name:'명패',price:350,desc:'처리 실적 +10%',icon:'▭'}];
 const SETS=[
   {id:'pro',name:'일잘러 세트',need:['kb','plate'],desc:'짬처리 충전 3개'},
@@ -2774,11 +2790,11 @@ const THEMES={
         ['콤보 = 게이지와 실드','연속으로 받을수록 게이지를 더 얻고 연출이 화려해집니다. <b>15콤보마다 실드 +1</b>입니다.']]}},
   office:{label:'칼퇴',palette:['#3FE0FF','#FF4FB8','#FFC23D','#8CFF5A'],itemNames:['기획팀','디자인팀','사업팀','개발팀'],
     logo:'<span class="kicker">TAP &amp; HOLD · OFFICE SURVIVAL</span><span class="l2 clock"><i>7</i><b class="blink">:</b><i>0</i><i>0</i> <i class="ampm">P</i><i class="ampm">M</i></span><span class="sub">오늘은 7시 전에 퇴근한다</span>',
-    ships:[['접이식 책상','입사 첫날 받은 접이식 책상과 노트북입니다. 실드 3.'],['칸막이 요새','3면 칸막이와 서류 탑으로 무장했습니다. 말 걸기 어려운 자리. 실드 5.'],
+    ships:[['접이식 책상','입사 첫날 받은 접이식 책상과 노트북입니다. 업무 평가 3.'],['칸막이 요새','3면 칸막이와 서류 탑으로 무장했습니다. 말 걸기 어려운 자리. 업무 평가 5.'],
       ['스탠딩 데스크','책상이 공중에 뜹니다. 서 있으면 못 들은 척이 쉬워집니다. 게이지 소모 -40%.'],['듀얼 모니터 기지','모니터 두 대와 대형 자석이 우리 부서 일만 끌어당깁니다.'],
-      ['벽시계 책상','퇴근 시계를 눈앞에 두니 시간이 천천히 갑니다. 담당 부서 유지 시간 +30%, 연차 4.'],['임원 결재 데스크','황금 결재판이 궤도를 돕니다. 남의 부서 일 1건을 반려하는 방어막이 8초마다 충전됩니다.']],
+      ['벽시계 책상','퇴근 시계를 눈앞에 두니 시간이 천천히 갑니다. 담당 부서 유지 시간 +30%, 업무 평가 4.'],['임원 결재 데스크','황금 결재판이 궤도를 돕니다. 남의 부서 일 1건을 반려하는 방어막이 8초마다 충전됩니다.']],
     t:{gauge:'못들은척',pulse:'짬처리',st:['여유','못들은척 중','한계','멘붕'],stage:'DAY',pilot:'내 자리',stageMode:'출근하기',
-      perfect:'그건 제 일입니다',good:'반려!',early:'헛손질',hit:'남의 부서 일 떠안음',hitLock:'멘붕 · 남의 일 떠안음',brk:'멘탈 붕괴',heal:'연차 +1',block:'결재 반려',gainUp:'여유 UP',
+      perfect:'그건 제 일입니다',good:'반려!',early:'헛손질',hit:'평가 −1 · 남의 일 떠안음',hitLock:'멘붕 · 평가 −1',brk:'멘탈 붕괴',heal:'평가 +1',block:'결재 반려',gainUp:'여유 UP',
       combo:['칼퇴 각','일잘러','에이스','팀장 후보','임원 승진','전설의 정시퇴근'],
       win:'칼퇴 성공!',lose:'야근 확정',over:'퇴사 각',
       bnTarget:n=>`우리 부서 업무 <b>${n}건</b>을 처리하세요.`,bnTier:n=>`<b>새 부서 합류!</b> 이제 ${n}개 부서가 번갈아 일을 던집니다.`,bnInf:'야근은 끝이 없습니다. 최대한 오래 버티세요.',
@@ -2790,7 +2806,7 @@ const THEMES={
       help:[['링 색 = 지금 우리 부서','책상을 둘러싼 링과 <b>같은 색 업무</b>만 실적이 됩니다. 링이 줄어들면 곧 담당 부서가 바뀌고, 바뀐 뒤 도착하는 업무는 남의 일입니다. <b>빨간 점선 링</b>이 붙은 업무는 늦게 도착할 일이니 밀어내거나 튕겨내세요.'],
         ['꾹 누르기 = 못 들은 척','누르고 있으면 <b>남의 부서 일을 밀어냅니다</b>. 우리 부서 일은 그대로 들어옵니다. 게이지가 바닥나면 멘붕으로 잠깁니다.'],
         ['닿기 직전에 누르기 = 짬처리','남의 일이 <b>닿기 직전에 누르는 순간</b> 판정됩니다. 완벽하면 "그건 제 일입니다"로 흡수, 조금 이르면 "반려!"로 튕겨 냅니다. 아무것도 없는데 짧게 치면 헛손질(충전 −1)입니다. PC는 Space로 조작하고 P나 Esc로 자리비움합니다.'],
-        ['콤보 = 칼퇴 게이지','연속으로 처리할수록 여유가 생깁니다. <b>15콤보마다 연차 +1</b>입니다.']]}},
+        ['콤보 = 칼퇴 게이지','연속으로 처리할수록 여유가 생깁니다. <b>15콤보마다 업무 평가 +1</b>입니다.']]}},
   rice:{label:'쌀',palette:['#FF4A3D','#FFD23D','#5EE05A','#A45CFF'],itemNames:['김치','계란말이','시금치','가지'],
     logo:'<span class="l1 fun">밥심 우주대전</span><span class="l2 fun"><i>쌀</i><i>의</i> <i>전</i><i>설</i></span>',
     ships:[['양은냄비','자취 1년 차의 찌그러진 양은냄비입니다. 실드 3.'],['압력솥','추가 달린 압력솥. 두꺼운 잠금 뚜껑으로 버팁니다. 실드 5.'],
@@ -3652,7 +3668,7 @@ function hud(){
   const hc=$('hCombo');
   if(G.combo>=2){const k=G.combo+'|'+comboMul();if(hc._k!==k){hc._k=k;hc.innerHTML=`<span class="cn">${G.combo}</span><span class="cl">연속 처리</span><span class="cm">×${comboMul()}</span>`;}}
   else if(hc._k){hc._k='';hc.innerHTML='';}
-  const hp=$('hHp');if(hp.childElementCount!==G.maxHp){hp.innerHTML='';for(let i=0;i<G.maxHp;i++){const d=document.createElement('span');d.innerHTML='<svg viewBox="0 0 20 22"><use href="#i-cal"/></svg>';hp.appendChild(d);}}
+  const hp=$('hHp');if(hp.childElementCount!==G.maxHp){hp.innerHTML='';for(let i=0;i<G.maxHp;i++){const d=document.createElement('span');d.innerHTML='<svg viewBox="0 0 20 22"><use href="#i-eval"/></svg>';hp.appendChild(d);}}
   [...hp.children].forEach((e,i)=>e.classList.toggle('off',i>=G.hp));
   $('gaugeFill').style.width=(G.gauge*100).toFixed(1)+'%';const gw=$('gaugeWrap');gw.classList.toggle('lock',G.lock);gw.classList.toggle('active',G.zero);gw.classList.toggle('low',!G.lock&&!G.zero&&G.gauge<.25);
   $('gPct').textContent=Math.round(G.gauge*100)+'%';{const st=T('st');$('gState').textContent=G.lock?(G.gauge>(G.lockTh||.25)?(G.holding?'손 떼면 재가동':st[0]):'회복 중 '+Math.round(G.gauge*100)+'/'+Math.round((G.lockTh||.25)*100)):G.zero?st[1]:G.gauge<.25?st[2]:st[0];}
@@ -3725,7 +3741,7 @@ function buildStages(){
   $('calLegend').innerHTML=[[1,BAL.tiers[0],2],[BAL.tiers[0]+1,BAL.tiers[1],3],[BAL.tiers[1]+1,STAGE_COUNT,4]].map(([a,z,n])=>`<span style="--tier:${tierColor(a)}"><i></i>${a}~${z}일 · ${n}개 부서</span>`).join('')+'<span>도장 = 인사고과 S·A·B</span>';
 }
 function shipStats(sd){
-  return [['멘탈 내구도',sd.hp,5,sd.hp+''],['못들은척 효율',Math.round((1.4-sd.drain)/.8*5),5,Math.round(100/sd.drain)+'%'],['업무 흡입력',sd.magnet?5:1,5,sd.magnet?'ON':'-'],
+  return [['업무 평가',sd.hp,5,sd.hp+''],['못들은척 효율',Math.round((1.4-sd.drain)/.8*5),5,Math.round(100/sd.drain)+'%'],['업무 흡입력',sd.magnet?5:1,5,sd.magnet?'ON':'-'],
           ['시간 체감',sd.beatMul>1?5:2,5,'×'+sd.beatMul],['결재 반려막',sd.shield?5:0,5,sd.shield?sd.shield+'s':'-']];
 }
 function buildHangar(){
@@ -3789,7 +3805,7 @@ const BOSS_TIPS=[
   ['grade_s',     r=>r.win&&r.grade&&r.grade[0]==='S',  '6시 40분 퇴근이면 회사 전설이야. 다음엔 S+ 노려 봐.'],
   ['no_perfect',  r=>r.win&&(r.perfects||0)===0,      '남의 일이 닿기 직전에 톡 치면 "그건 제 일입니다"로 실적이 돼. 한 번만 써 봐.'],
   ['clean',       r=>r.win&&(r.hits||0)===0,          '무결점 근무! 이 기세로 짬처리 PERFECT를 더 노려 봐.'],
-  ['high_combo',  r=>r.win&&r.maxCombo>=30,           '30연속이면 손이 아니라 눈으로 치는 거지. 연차 회복도 그래서 잘 도는 거야.'],
+  ['high_combo',  r=>r.win&&r.maxCombo>=30,           '30연속이면 손이 아니라 눈으로 치는 거지. 평가가 다시 오르는 것도 그래서야.'],
   ['inf_long',    r=>r.mode==='inf'&&(r.endT||0)>=150, '야근 2분 반 버텼으면 오늘은 택시비 청구해도 돼.'],
   ['inf_short',   r=>r.mode==='inf'&&(r.endT||0)<60,   '무한 야근은 1분이 고비야. 색이 늘어날 때마다 게이지를 아껴.'],
   ['default',     r=>true,                              '두 부서가 동시에 던질 땐 톡(짬처리)이 가장 확실해.']];
@@ -3827,14 +3843,14 @@ function endRun(win){
       const g=$('rGrade');
       if(run.mode==='stage'&&win){const b=run.leaveBonus||0,p=run.perfects||0,gd=run.goods||0,h=run.hits||0;
         g.hidden=false;g.innerHTML=run.grade?`<b>퇴근 시각 등급 ${run.grade[0]} · ${run.grade[1]}</b><br>7:00 − PERFECT ${p}×2분 − GOOD ${gd}×1분${h?` + 떠안음 ${h}×2분`:''} = <b>${fmtClock(c)}</b>`
-          :(run.otState==='done'?'<b>야근 수당 수령</b> · 포인트 2배, 시간 등급은 없음':'<b>시간 등급 없음</b> · 연차를 다 지키면(별 3개) 퇴근 시각 등급이 열립니다');}
+          :(run.otState==='done'?'<b>야근 수당 수령</b> · 포인트 2배, 시간 등급은 없음':'<b>시간 등급 없음</b> · 업무 평가를 다 지키면(별 3개) 퇴근 시각 등급이 열립니다');}
       else g.hidden=true;
       const mm=$('rMissions');const done=run.missionsDone||[];mm.hidden=!done.length;mm.innerHTML=done.map(x=>`<div>✔ 미션 달성 · ${x} <b>+80P</b></div>`).join('');
       const pr=$('rPromo');if(save.promo){pr.hidden=false;pr.innerHTML=`<b>승진!</b> 길농원, ${save.promo} 직급 달성`;save.promo=null;persist();}else pr.hidden=true;}
     $('rPulse').textContent=`${run.perfects||0} / ${run.goods||0}`;$('rHits').textContent=(run.hits||0)+'건';
     $('rTip').innerHTML='<b>팀장 한마디</b> · '+bossTip(run,win);
     if(run.mode==='inf'){$('rExtraL').textContent='최고 기록';$('rExtra').textContent=save.best.toLocaleString();}
-    else{$('rExtraL').textContent='남은 연차';$('rExtra').textContent=Math.max(0,run.hp)+' / '+run.maxHp;}
+    else{$('rExtraL').textContent='업무 평가';$('rExtra').textContent=Math.max(0,run.hp)+' / '+run.maxHp;}
     $('nextBtn').textContent='다음 날 출근';$('nextBtn').hidden=!(run.mode==='stage'&&win&&run.stage<STAGE_COUNT);
     show('result');
   },900);
