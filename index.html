@@ -203,6 +203,9 @@ nav.tabs .in{max-width:460px;margin:0 auto;display:grid;grid-template-columns:re
 nav.tabs button{border:0;background:none;padding:8px 0 10px;font-size:12.5px;min-height:56px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
 nav.tabs button span{font-size:20px}
 nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:700}
+.ttshelp{position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--surface);color:var(--ink);border:1.5px solid var(--bad);border-radius:14px;padding:10px 12px;font-size:13.5px;display:flex;gap:10px;align-items:center;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.ttshelp span{flex:1;min-width:0}
+.ttshelp[hidden]{display:none!important}
 /* onboarding */
 .ob{position:fixed;inset:0;background:var(--bg);z-index:30;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow-y:auto}
 .ob[hidden]{display:none!important}
@@ -425,7 +428,7 @@ const BYID=Object.fromEntries(WORDS.map(w=>[w.id,w]));
 const LEVELS=["N5","N4","N3","N2","N1"];
 const INTERVAL=[0,1,2,4,7,15,30]; // days per box
 const DAY=864e5, MIN=6e4;
-const APP_VER="1.7";
+const APP_VER="2.0";
 const KEY="skimvoca.v1";
 // settings: scope "cum" mixes the two levels below the target into new-word batches, "only" uses the target level alone; reveal "delay" hides the meaning on skim cards until tap/40% of the timer; order "new" runs new words before reviews.
 // rev: flashcards per review batch; sgoal: streak goal (days); freeze "auto" bridges one missed day per week. best: longest streak; freeze: {week,day,at} of the last bridged day; ret: {day,gap} on a return day (new-word goal halved).
@@ -514,18 +517,47 @@ function loadVoices(){
   sel.innerHTML=jaVoices.length?`<option value="">자동 선택 (가장 자연스러운 음성)</option>`+jaVoices.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)}${rankOf(v)<=5?" · 고품질":""}</option>`).join(""):`<option value="">일본어 음성 없음</option>`;
   sel.value=jaVoices.some(v=>v.voiceURI===S.settings.voice)?S.settings.voice:"";
   const v=pickVoice(),note=$("voiceNote");
-  if(!v){note.className="vnote warn";note.textContent="이 기기에 일본어 음성이 설치되어 있지 않습니다. Windows는 설정 > 시간 및 언어 > 음성에서, iPhone은 설정 > 손쉬운 사용 > 읽기 및 말하기 > 음성 > 일본어에서 음성을 추가해 주세요.";}
+  if(!v&&IS_SAMSUNG){note.className="vnote warn";note.textContent="삼성 인터넷 브라우저에서는 일본어 음성이 잡히지 않는 경우가 많습니다. 이 파일을 Chrome으로 열어 주세요(파일 길게 누르기 > 연결 프로그램 > Chrome).";}
+  else if(!v&&IS_ANDROID){note.className="vnote warn";note.textContent="갤럭시(안드로이드)는 설정 > 일반 > 텍스트 음성 변환(TTS)에서 기본 엔진을 Google 음성 서비스로 바꾸고, 엔진 설정 > 음성 데이터 설치에서 일본어를 받은 뒤 앱을 다시 열어 주세요. 음성 목록이 비어 있어도 Google 엔진에 일본어가 있으면 소리는 납니다.";}
+  else if(!v){note.className="vnote warn";note.textContent="이 기기에 일본어 음성이 설치되어 있지 않습니다. Windows는 설정 > 시간 및 언어 > 음성에서, iPhone은 설정 > 손쉬운 사용 > 읽기 및 말하기 > 음성 > 일본어에서 음성을 추가해 주세요.";}
   else if(rankOf(v)<=5){note.className="vnote";note.textContent=`현재 음성: ${v.name}. 일본 원어민 억양에 가까운 고품질 음성입니다.`;}
   else{note.className="vnote";note.textContent=`현재 음성: ${v.name}. 더 자연스러운 발음은 Edge 브라우저(Nanami·Keita 음성)나 Chrome(Google 日本語), iPhone의 Kyoko 향상된 음성에서 들을 수 있습니다.`;}
 }
 function pickVoice(){return jaVoices.find(v=>v.voiceURI===S.settings.voice)||jaVoices[0]||null}
-function utter(text){const u=new SpeechSynthesisUtterance(text);u.lang="ja-JP";u.rate=+S.settings.rate||.9;const v=pickVoice();if(v)u.voice=v;return u}
-// speak(text) replaces whatever is playing; speakSeq([a,b]) plays the parts back to back (word, then its example sentence).
-function stopSpeech(){try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
+// Android / Samsung notes: Chrome on Android drops an utterance queued synchronously right after cancel(), so speak() is deferred by a tick;
+// utterances are kept in `ttsKeep` so the GC cannot silence them mid-sentence; the first touch "unlocks" the engine (Chrome needs a user gesture once);
+// a Japanese voice may be missing on Samsung TTS, so the ja-JP lang is always set and a diagnostic banner explains what to install.
+const IS_ANDROID=/Android/i.test(navigator.userAgent),IS_SAMSUNG=/SamsungBrowser/i.test(navigator.userAgent);
+let ttsKeep=[],ttsSeq=0,ttsUnlocked=false,ttsErr=0,ttsOk=0,ttsT=null;
+function utter(text){const u=new SpeechSynthesisUtterance(text);u.lang="ja-JP";u.rate=+S.settings.rate||.9;const v=pickVoice();if(v)u.voice=v;u.onstart=()=>{ttsOk++;hideTtsHelp()};u.onerror=e=>{if(e&&e.error!=="interrupted"&&e.error!=="canceled"){ttsErr++;showTtsHelp(e.error)}};return u}
+function stopSpeech(){ttsSeq++;clearTimeout(ttsT);try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
 function speak(text){speakSeq([text])}
-function speakSeq(parts){try{const sy=window.speechSynthesis;if(!sy)return;parts=parts.filter(Boolean);if(!parts.length)return;sy.cancel();parts.forEach((t,i)=>{const u=utter(t);if(i>0)u.rate=Math.min(1,(+S.settings.rate||.9)+.05);sy.speak(u)})}catch(e){}}
+function speakSeq(parts){try{const sy=window.speechSynthesis;if(!sy){showTtsHelp("unsupported");return}parts=parts.filter(Boolean);if(!parts.length)return;stopSpeech();const my=ttsSeq;
+  ttsT=setTimeout(()=>{if(my!==ttsSeq)return;try{sy.resume()}catch(e){}ttsKeep=parts.map((t,i)=>{const u=utter(t);if(i>0)u.rate=Math.min(1,(+S.settings.rate||.9)+.05);return u});ttsKeep.forEach(u=>sy.speak(u));
+    if(IS_ANDROID)setTimeout(()=>{if(my===ttsSeq&&!sy.speaking&&!sy.pending&&ttsOk===0)showTtsHelp("silent")},1500)},IS_ANDROID?120:0)}catch(e){showTtsHelp("exception")}}
+function unlockTts(){if(ttsUnlocked)return;ttsUnlocked=true;try{const sy=window.speechSynthesis;if(!sy)return;sy.getVoices();const u=new SpeechSynthesisUtterance(" ");u.volume=0;u.lang="ja-JP";sy.speak(u);setTimeout(()=>{try{sy.cancel()}catch(e){}},50);setTimeout(loadVoices,300)}catch(e){}}
+["pointerdown","touchstart","keydown"].forEach(ev=>document.addEventListener(ev,unlockTts,{once:true,passive:true}));
+function ttsHelpText(why){
+  const base=why==="unsupported"?"이 브라우저는 음성 합성을 지원하지 않습니다.":why==="silent"?"음성이 재생되지 않았습니다.":"음성 재생 오류("+why+")가 났습니다.";
+  if(IS_SAMSUNG)return base+" 삼성 인터넷은 일본어 음성이 자주 비어 있습니다. 같은 파일을 Chrome 브라우저로 열면 소리가 납니다.";
+  if(IS_ANDROID)return base+" 갤럭시 폰은 설정 > 일반 > 텍스트 음성 변환(TTS) > 기본 엔진을 'Google 음성 서비스'(또는 Speech Recognition & Synthesis)로 바꾸고, 엔진 설정 > 음성 데이터 설치에서 '일본어'를 받아 주세요. 미디어 볼륨과 무음 모드도 확인해 주세요.";
+  return base+" 기기에 일본어 음성이 설치되어 있는지 확인해 주세요.";
+}
+function showTtsHelp(why){let b=$("ttsHelp");if(!b){b=document.createElement("div");b.id="ttsHelp";b.className="ttshelp";document.body.appendChild(b)}b.innerHTML=`<span>🔇 ${esc(ttsHelpText(why))}</span><button class="ghost" id="ttsHelpX">닫기</button>`;$("ttsHelpX").onclick=()=>{b.hidden=true;S.ttsMute=1};if(!S.ttsMute)b.hidden=false}
+function hideTtsHelp(){const b=$("ttsHelp");if(b)b.hidden=true}
 // Kanji spelling gives the engine the dictionary pitch accent; single kanji (often misread) fall back to the kana reading.
-function ttsText(w){const strip=t=>(t||"").split(/[・;／/]/)[0].replace(/[～~〜…]/g,"").replace(/[（(].*?[）)]/g,"").trim();const t=strip(w.w),r=strip(w.rd);if(!/[㐀-鿿]/.test(t))return t||r;if([...t].length===1)return r||t;return t}
+// TTS always gets the kana reading, never the kanji: engines misread homographs (e.g. 空 そら/から, 生 なま/せい), and the reading column is the one we verified.
+const ttsStrip=t=>(t||"").split(/[・;／/、]/)[0].replace(/[～~〜…]/g,"").replace(/[（(].*?[）)]/g,"").trim();
+function ttsText(w){return ttsStrip(w.rd)||ttsStrip(w.w)}
+// Example sentence for TTS: the target word (or its kanji stem, for conjugated verbs/adjectives) is swapped for its kana reading so at least the word being learned is pronounced as taught; the rest of the sentence keeps kanji (context disambiguates it).
+const KANA_RE=/[ぁ-ゖァ-ヺー]/;
+function ttsExample(w){const ex=w.ex||"";if(!ex)return"";if(/[～~〜]/.test(w.w))return ex; // counters/affixes (～軒) change sound with the number, leave them to the engine
+  const t=ttsStrip(w.w),r=ttsStrip(w.rd);if(!t||!r||!/[㐀-鿿]/.test(t))return ex;
+  if(ex.includes(t))return ex.split(t).join(r);
+  let k=0;while(k<t.length&&k<r.length&&t[t.length-1-k]===r[r.length-1-k]&&KANA_RE.test(t[t.length-1-k]))k++; // shared kana suffix (okurigana)
+  const ks=t.slice(0,t.length-k),rs=r.slice(0,r.length-k);if(!ks||!/[㐀-鿿]/.test(ks))return ex;
+  let i=-1,from=0;while((i=ex.indexOf(ks,from))>=0){const nx=ex[i+ks.length]||"";const pv=i>0?ex[i-1]:"";if(!/[㐀-鿿]/.test(nx)&&!/[㐀-鿿]/.test(pv))return ex.slice(0,i)+rs+ex.slice(i+ks.length);from=i+1}
+  return ex}
 // Rough part-of-speech class from the Japanese form + Korean gloss: used to pick quiz distractors of the same kind.
 const hasKanji=t=>/[㐀-鿿]/.test(t);
 function cls(w){const t=w.w,m=w.m,r=w.rd;if(/～/.test(t))return"affix";if(/^[ァ-ヺー・]+$/.test(t))return"kata";if(/[うくぐすつぬぶむる]$/.test(r)&&/다$/.test(m)&&!/하다$/.test(m))return"verb";if(/い$/.test(t)&&/다$/.test(m))return"iadj";if(/(하다|스럽다|롭다)$/.test(m))return"na";return"noun"}
@@ -539,9 +571,9 @@ function distract(w,type){ // type "m": options are meanings, "r": options are r
 const canAskRd=w=>hasKanji(w.w)&&!/[～・]/.test(w.w+w.rd)&&w.rd!==w.w;
 function speakW(w){speak(ttsText(w))}
 // Word, short pause, then the example sentence (setting "예문도 읽기").
-function speakWE(w){if(S.settings.exTts!=="off"&&w.ex)speakSeq([ttsText(w),w.ex]);else speakW(w)}
+function speakWE(w){if(S.settings.exTts!=="off"&&w.ex)speakSeq([ttsText(w),ttsExample(w)]);else speakW(w)}
 function speakId(id){speakW(BYID[id])}
-function speakEx(id){speak(BYID[id].ex)}
+function speakEx(id){speak(ttsExample(BYID[id]))}
 const autoPlay=(stage,w)=>{const a=S.settings.auto;if(a==="off")return;if(stage==="front"){if(a==="all")speakW(w);return}if(a==="all"||stage==="back")speakWE(w)}; // stage "front" (flashcard question side: word only) | "skim" | "back" // stage "skim" | "back"
 // Part-of-speech label from cls(): heuristic, so plain nouns are only labelled when the gloss is clearly nominal.
 const POS={affix:"접사",kata:"가타카나어",verb:"동사",iadj:"い형용사",na:"な형용사"};
@@ -765,8 +797,15 @@ function pick(b){
   showRd(w);$("theCard").insertAdjacentHTML("beforeend",`<div class="back"><div class="mean"><mark>${esc(w.m)}</mark></div>${backExtra(w)}</div>`);autoPlay("back",w);
   try{if(navigator.vibrate)navigator.vibrate(ok?10:[10,40,10])}catch(e){}
   grade(w,ok?2:3,sess.sub==="soft"); // a miss drops one box and waits until tomorrow; soft (first-day) quiz: no drop
-  setTimeout(()=>{if(!sess)return;sess.locked=false;sess.i++;step()},ok?900:1800);
+  // Stay on the answered card until the learner moves on (time to repeat the word and listen to the example); Enter / Space / → also advance.
+  sess.answered=true;
+  const nxt=document.createElement("div");nxt.className="acts";nxt.style.setProperty("--n","2");
+  nxt.innerHTML=`<button class="btn" id="qAgain">🔊 다시 듣기</button><button class="btn primary" id="qNext">${sess.i+1>=sess.list.length?"결과 보기":"다음 문제"}<small>Enter · → · 스페이스바</small></button>`;
+  $("sbody").appendChild(nxt);
+  $("qAgain").onclick=()=>speakWE(w);$("qNext").onclick=quizNext;
+  $("qNext").focus({preventScroll:true});
 }
+function quizNext(){if(!sess||!sess.answered)return;sess.answered=false;sess.locked=false;sess.i++;step()}
 function launch(kind){
   if(kind==="skim"){if(!S.study.firstDay&&!Object.keys(S.cards).length){S.study.firstDay=today();save()}openStudy("skim",newWords(newLeft()))}
   else if(kind==="flash"){const L=dueList().map(w=>[kd(dkey(new Date(card(w.id).due))).getTime(),Math.random(),w]);L.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);openStudy("flash",L.slice(0,revCap()).map(x=>x[2]))} // oldest due day first, shuffled within a day, capped
@@ -779,7 +818,7 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape")return closeStudy();
   if(sess.kind==="skim"&&sess.i<sess.list.length){if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();if(sess.rev)ans(-1);else reveal()}if(e.key==="ArrowUp"){e.preventDefault();ans(2)}}
   if(sess.kind==="flash"&&sess.i<sess.list.length){if(e.key===" "){e.preventDefault();flip()}else if(sess.flipped&&"123".includes(e.key))ans(+e.key-1)}
-  if(sess.kind==="quiz"&&"1234".includes(e.key)){const b=document.querySelectorAll(".opt")[+e.key-1];if(b)pick(b)}
+  if(sess.kind==="quiz"){if(sess.answered){if(e.key==="Enter"||e.key===" "||e.key==="ArrowRight"){e.preventDefault();quizNext()}}else if("1234".includes(e.key)){const b=document.querySelectorAll(".opt")[+e.key-1];if(b)pick(b)}}
 });
 document.addEventListener("visibilitychange",()=>{if(!sess||!sess.list.length)return;if(document.hidden)stopTimer();else sess.t0=Date.now()});
 
@@ -790,7 +829,7 @@ $("selLevel").onchange=e=>{S.settings.level=e.target.value;bookLimit=200;save();
 $("selGoal").onchange=e=>{S.settings.goal=+e.target.value;save();render()};
 $("selRate").onchange=e=>{S.settings.rate=+e.target.value;save();speak("こんにちは")};
 $("selVoice").onchange=e=>{S.settings.voice=e.target.value;save();loadVoices();speak("おはようございます")};
-$("testVoice").onclick=()=>speak("おはようございます。日本語の勉強を始めましょう。");
+$("testVoice").onclick=()=>{unlockTts();speak("おはようございます。日本語の勉強を始めましょう。")};
 try{if(window.speechSynthesis){speechSynthesis.addEventListener("voiceschanged",loadVoices);}}catch(e){}
 $("selSpeed").onchange=e=>{S.settings.speed=+e.target.value;save()};
 $("selRd").onchange=e=>{S.settings.rds=e.target.value;save();renderBook()};
